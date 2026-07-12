@@ -36,3 +36,33 @@ def batch_reactor(
         time += dt
 
     return time_history, concentration_history
+
+def cstr_steady_state(
+    inlet_concentration,
+    k,
+    reaction_order,
+    residence_time,
+):
+    if reaction_order == 0:
+        outlet_concentration = inlet_concentration - k * residence_time
+
+    elif reaction_order == 1:
+        outlet_concentration = inlet_concentration / (
+            1 + k * residence_time
+        )
+
+    elif reaction_order == 2:
+        a = k * residence_time
+        b = 1.0
+        c = -inlet_concentration
+
+        discriminant = b**2 - 4 * a * c
+
+        outlet_concentration = (
+            -b + discriminant**0.5
+        ) / (2 * a)
+
+    else:
+        raise ValueError("Invalid reaction order.")
+
+    return max(0.0, outlet_concentration)

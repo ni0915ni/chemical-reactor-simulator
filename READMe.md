@@ -69,6 +69,10 @@ The Arrhenius plot shows the exponential dependence of the reaction rate constan
 
 The batch reactor profile demonstrates the decrease in reactant concentration over time for a first-order reaction.
 
+### Temperature Sweep
+
+![Temperature Sweep](figures/temperature_sweep.png)
+
 ## Installation
 
 Clone the repository:
