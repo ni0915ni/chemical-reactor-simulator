@@ -16,7 +16,6 @@ for temperature in range(300, 801, 10):
     rate_constants.append(k)
 
 plt.plot(temperatures, rate_constants)
-
 plt.xlabel("Temperature (K)")
 plt.ylabel("Rate Constant k (1/s)")
 plt.title("Effect of Temperature on Reaction Rate Constant")
