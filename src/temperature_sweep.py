@@ -1,7 +1,7 @@
-import matplotlib.pyplot as plt
-
 from kinetics import calculate_rate_constant
+from plotting import plot_temperature_sweep
 from reactors import cstr_steady_state
+
 def temperature_sweep():
 
     concentration = float(input("Feed concentration (mol/L): "))
@@ -32,13 +32,7 @@ def temperature_sweep():
         temperatures.append(temperature)
         conversions.append(conversion)
 
-    plt.plot(temperatures, conversions)
-    plt.xlabel("Temperature (K)")
-    plt.ylabel("Conversion")
-    plt.title("Temperature Sweep")
-
-    plt.grid(True)
-
-    plt.savefig("figures/temperature_sweep_plot.png")
-    
-    plt.show()
+    plot_temperature_sweep(
+        temperatures,
+        conversions,
+    )

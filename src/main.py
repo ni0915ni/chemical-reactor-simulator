@@ -1,9 +1,7 @@
 from temperature_sweep import temperature_sweep
-from reactors import batch_reactor, cstr_steady_state
-from plot_batch import plot_batch
-from reactors import batch_reactor
+from reactors import batch_reactor, cstr_steady_state, pfr_reactor
+from plotting import plot_batch, plot_pfr, plot_cstr
 from kinetics import calculate_rate_constant
-import math
 
 def main():
     print("=" * 40)
@@ -15,7 +13,8 @@ def main():
     print("\nSelect Reactor")
     print("1. Batch Reactor")
     print("2. CSTR")
-    print("3. Temperature Sweep")
+    print("3. PFR")
+    print("4. Temperature Sweep")
 
     choice = input("Choice: ")
 
@@ -70,14 +69,55 @@ def main():
             reaction_order,
             residence_time,
         )
+
+        cstr_residence_times = []
+        cstr_conversions = []
+
+        number_of_points = 51
+
+        for index in range(number_of_points):
+            current_residence_time = (
+                residence_time * index / (number_of_points - 1)
+            )
+
+            current_outlet_concentration = cstr_steady_state(
+                concentration,
+                k,
+                reaction_order,
+                current_residence_time,
+            )
+
+            current_conversion = (
+                concentration - current_outlet_concentration
+            ) / concentration
+
+            cstr_residence_times.append(current_residence_time)
+            cstr_conversions.append(current_conversion)
+
+        plot_cstr(
+            cstr_residence_times,
+            cstr_conversions,
+        )
+    
     elif choice == "3":
-        temperature_sweep()
+        residence_time = float(input("Residence time (s): "))
+        dt = float(input("Time step (s): "))
+
+        time_history, concentration_history = pfr_reactor(
+            concentration,
+            k,
+            reaction_order,
+            residence_time,
+            dt,
+        )
+
+        outlet_concentration = concentration_history[-1]
 
         conversion = (
             concentration - outlet_concentration
         ) / concentration
 
-        print(f"\nReactor Type = CSTR")
+        print("\nReactor Type = PFR")
         print(f"Temperature = {temperature:.1f} K")
         print(f"Residence Time = {residence_time:.1f} s")
         print(
@@ -87,6 +127,14 @@ def main():
         print(f"Conversion = {conversion:.2%}")
         print(f"Reaction Order = {reaction_order}")
         print(f"Rate Constant = {k:.6e} 1/s")
+
+        plot_pfr(
+        time_history,
+        concentration_history,
+        )
+    
+    elif choice == "4":
+        temperature_sweep()
 
     else:
         print("Invalid reactor selection.")
